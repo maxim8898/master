@@ -1,6 +1,8 @@
+import pymongo
 from typing import Optional, List
+from datetime import datetime
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pymongo import MongoClient
 
 app = FastAPI()
@@ -13,6 +15,7 @@ class Item(BaseModel):
 
 
 class Snapshot(BaseModel):
+    datetime: datetime
     left: int
     left_center: int
     right_center: int
@@ -34,7 +37,18 @@ def push_data(item: Snapshot):
     collection = db['sensors']
     collection.insert_one(item.dict())
 
-    return {}
+    return {"Message": "Collection successfully added", "collection": item.dict()}
+
+
+@app.post("/snapshots/removeAll")
+def remove_all_data():
+    uri = "mongodb://root:example@mongo:27017"
+    client = MongoClient(uri)
+    db = client['snapshots']
+    collection = db['sensors']
+    result = collection.delete_many({})
+
+    return {"Snapshots deleted": result.deleted_count}
 
 
 @app.get("/snapshot")
@@ -48,6 +62,7 @@ def get_data():
 
     for item in items:
         snap_list.append(Snapshot(
+            datetime=item['datetime'],
             left=item['left'],
             left_center=item['left_center'],
             right_center=item['right_center'],
@@ -60,3 +75,27 @@ def get_data():
 
     return {"collection": snap_list.dict()}
 
+
+@app.get("/snapshot/topNRows")
+def get_data(count_of_rows: int):
+    uri = "mongodb://root:example@mongo:27017"
+    client = MongoClient(uri)
+    db = client['snapshots']
+    collection = db['sensors']
+    items = collection.find().sort('datetime', pymongo.DESCENDING).limit(count_of_rows)
+    snap_list = []
+
+    for item in items:
+        snap_list.append(Snapshot(
+            datetime=item['datetime'],
+            left=item['left'],
+            left_center=item['left_center'],
+            right_center=item['right_center'],
+            right=item['right'],
+            speed=item['speed'],
+            temperature=item['temperature'],
+            angle=item['angle']
+        ))
+    snap_list = SnapshotList(each_item=snap_list)
+
+    return {"collection": snap_list.dict()}
