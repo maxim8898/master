@@ -6,11 +6,13 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: snapshots
     restart: always
     ports:
       - 27017:27017
     volumes:
-      - ./mongodata:/data/db      
+      - ./mongodata:/data/db
+      - ./mongo-sensors-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
   react:
     container_name: react
     build:

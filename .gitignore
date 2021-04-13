@@ -3,5 +3,6 @@
 /app/pnp.js
 /app/coverage
 /app/build
+/api/.idea
 
 /mongodata
