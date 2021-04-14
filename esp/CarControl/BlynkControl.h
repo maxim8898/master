@@ -16,7 +16,7 @@ class BlynkControl{
   }
 
   int GetAngle(){
-    return y + startMotorIndex;  
+    return y;  
   }
 };
 

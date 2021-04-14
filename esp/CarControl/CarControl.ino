@@ -1,9 +1,14 @@
 #define BLYNK_PRINT Serial
 
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 #include <BlynkSimpleEsp8266.h>
 #include <Servo.h>
 #include "BlynkControl.h"
+#include "LidarSensor.h"
+#include "HttpSensorClient.h"
+#include "JSON.h"
 
 const int motorSpeedDefault = 1500;
 const int angleDefault = 90;
@@ -20,9 +25,14 @@ char pass[] = "YourPassword";
 Servo myservo;
 Servo motor;
 BlynkControl BlControl;
+LidarSensor lidarSensor;
+HttpSensorClient httpSensorClient;
+JSON json;
 
 int motorSpeed = 0;
 int angle = 0;
+String request;
+int sensors[2];
 
 void setup() {
   Serial.begin(9600);
@@ -32,7 +42,8 @@ void setup() {
   motor.attach(2, 544, 2400);
   motor.writeMicroseconds(motorSpeedDefault);
   delay(3000);
-  
+
+  lidarSensor.InitializeSensors();
   Blynk.begin(auth, ssid, pass);
 }
 
@@ -46,4 +57,11 @@ void loop() {
   if (angle >= 75 && angle <= 105) {
     myservo.write(angle);
   }
+  
+  lidarSensor.ReadSensors(sensors);
+  request = json.serialize("2021-04-14T19:00:39.812Z", sensors[0], 3, 4, sensors[1], motorSpeed, 25, angle);
+  httpSensorClient.SendPostRequest(request);
+  Serial.println("Motor Speed= " + String(motorSpeed));
+  Serial.println("Angle= " + String(angle));
+  delay(100);
 }
