@@ -1,6 +1,4 @@
-const int startMotorIndex = 25;
-
-int slider = 0;
+int slider = 1;
 int x = 0;
 int y = 0;
   
@@ -12,11 +10,11 @@ class BlynkControl{
   }
 
   int GetAcceleration(){
-    return x + startMotorIndex;  
+    return x;
   }
 
   int GetAngle(){
-    return y + startMotorIndex;  
+    return y;  
   }
 };
 
