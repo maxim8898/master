@@ -1,6 +1,6 @@
 const int startMotorIndex = 25;
 
-int slider = 0;
+int slider = 1;
 int x = 0;
 int y = 0;
   

@@ -1,13 +1,10 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
 
-//Your Domain name with URL path or IP address with path
-const char* serverName = "http://YourNetwork:3002/snapshots";
-
 class HttpSensorClient{
   public:
   
-  void SendPostRequest(String request){
+  void SendPostRequest(String serverName, String request){
     HTTPClient http;
       
     // Your Domain name with URL path or IP address with path

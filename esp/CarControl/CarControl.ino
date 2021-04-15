@@ -12,6 +12,7 @@
 
 const int motorSpeedDefault = 1500;
 const int angleDefault = 90;
+const String serverName = "http://192.168.31.161:3002/snapshots";
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
@@ -35,7 +36,6 @@ String request;
 int sensors[2];
 
 void setup() {
-  Serial.begin(9600);
   myservo.attach(0);
   myservo.write(angleDefault);
   
@@ -60,8 +60,10 @@ void loop() {
   
   lidarSensor.ReadSensors(sensors);
   request = json.serialize("2021-04-14T19:00:39.812Z", sensors[0], 3, 4, sensors[1], motorSpeed, 25, angle);
-  httpSensorClient.SendPostRequest(request);
+  httpSensorClient.SendPostRequest(serverName, request);
   Serial.println("Motor Speed= " + String(motorSpeed));
   Serial.println("Angle= " + String(angle));
+  Serial.println("Sensor1= " + String(sensors[0]));
+  Serial.println("Sensor2= " + String(sensors[1]));
   delay(100);
 }
