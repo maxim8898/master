@@ -15,7 +15,7 @@ class Item(BaseModel):
 
 
 class Snapshot(BaseModel):
-    datetime: datetime
+    datetime: Optional[datetime]
     left: int
     left_center: int
     right_center: int

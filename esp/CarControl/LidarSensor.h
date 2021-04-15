@@ -64,7 +64,7 @@ class LidarSensor{
     // initing LOX1
     if(!lox1.begin(LOX1_ADDRESS)) {
       Serial.println(F("Failed to boot first VL53L0X"));
-      while(1);
+//      while(1);
     }
     delay(10);
   
@@ -75,7 +75,7 @@ class LidarSensor{
     //initing LOX2
     if(!lox2.begin(LOX2_ADDRESS)) {
       Serial.println(F("Failed to boot second VL53L0X"));
-      while(1);
+//      while(1);
     }
   }
   
