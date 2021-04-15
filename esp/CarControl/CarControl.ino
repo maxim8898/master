@@ -2,6 +2,8 @@
 
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include <ESPAsyncTCP.h>
+#include <ESPAsyncWebServer.h>
 #include <WiFiClient.h>
 #include <BlynkSimpleEsp8266.h>
 #include <Servo.h>
@@ -30,6 +32,10 @@ LidarSensor lidarSensor;
 HttpSensorClient httpSensorClient;
 JSON json;
 
+AsyncWebServer server(80);
+AsyncWebSocket ws("/sensors");
+HTTPClient http;
+
 int motorSpeed = 0;
 int angle = 0;
 String request;
@@ -45,6 +51,12 @@ void setup() {
 
   lidarSensor.InitializeSensors();
   Blynk.begin(auth, ssid, pass);
+
+  server.addHandler(&ws);
+  // Start server
+  server.begin();
+  // Print ESP Local IP Address
+  Serial.println(WiFi.localIP());
 }
 
 void loop() {
@@ -61,6 +73,7 @@ void loop() {
   lidarSensor.ReadSensors(sensors);
   request = json.serialize("2021-04-14T19:00:39.812Z", sensors[0], 3, 4, sensors[1], motorSpeed, 25, angle);
   httpSensorClient.SendPostRequest(serverName, request);
+  ws.textAll(String(request));
   Serial.println("Motor Speed= " + String(motorSpeed));
   Serial.println("Angle= " + String(angle));
   Serial.println("Sensor1= " + String(sensors[0]));
