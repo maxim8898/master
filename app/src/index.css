@@ -5,9 +5,99 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #282c34;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.devCorner {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 600px;
+  padding: 40px;
+  margin: auto;
+  text-align: center;
+}
+
+.devCornerPanel {
+  display: flex;
+  justify-content: center;
+  padding: 40px 40px 0 40px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.leftPanel {
+  display: flex;
+  padding: 10px 10px 0 10px;
+  text-align: center;
+}
+.rightPanel {
+  display: flex;
+  justify-content: center;
+  padding: 10px 10px 0 10px;
+  text-align: center;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 10px 10px 0 10px;
+  text-align: center;
+}
+
+.statusBar {
+  height: 2em;
+  background: transparent;
+  font-size: 22px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: bold;
+  color: cadetblue;
+}
+
+.statusBar input {
+  width: 400px;
+  height: auto;
+  font-size: 22px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: bold;
+  background: transparent;
+  border: cadetblue 2px solid;
+  color: #61dafb;
+}
+
+.toolbarButton {
+  height: 2em;
+  width: 125px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: bold;
+  color: cadetblue;
+}
+
+.toolbarStatusField {
+  height: 2.5em;
+  width: 125px;
+  border-top: #0f8b8d 2px dashed;
+  border-left: none;
+  border-right: none;
+  background: transparent;
+  padding: 10px 0;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: bold;
+  color: cadetblue;
+}
+
+.toolbarButton:hover {
+  border-bottom: solid 2px #61dafb;
 }
