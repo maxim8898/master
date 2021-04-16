@@ -14,7 +14,7 @@
 
 const int motorSpeedDefault = 1500;
 const int angleDefault = 90;
-const String serverName = "http://192.168.31.161:3002/snapshots";
+const String serverName = "http://172.20.10.10:3002/snapshots";
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
@@ -39,7 +39,7 @@ HTTPClient http;
 int motorSpeed = 0;
 int angle = 0;
 String request;
-int sensors[2];
+int sensors[4];
 
 void setup() {
   myservo.attach(0);
@@ -48,15 +48,13 @@ void setup() {
   motor.attach(2, 544, 2400);
   motor.writeMicroseconds(motorSpeedDefault);
   delay(3000);
-
+  Serial.begin(115200);
   lidarSensor.InitializeSensors();
   Blynk.begin(auth, ssid, pass);
 
   server.addHandler(&ws);
   // Start server
   server.begin();
-  // Print ESP Local IP Address
-  Serial.println(WiFi.localIP());
 }
 
 void loop() {
@@ -71,12 +69,15 @@ void loop() {
   }
   
   lidarSensor.ReadSensors(sensors);
-  request = json.serialize("2021-04-14T19:00:39.812Z", sensors[0], 3, 4, sensors[1], motorSpeed, 25, angle);
+  request = json.serialize(sensors[0], sensors[1], sensors[2], sensors[3], motorSpeed, 25, angle);
   httpSensorClient.SendPostRequest(serverName, request);
   ws.textAll(String(request));
+
   Serial.println("Motor Speed= " + String(motorSpeed));
   Serial.println("Angle= " + String(angle));
-  Serial.println("Sensor1= " + String(sensors[0]));
-  Serial.println("Sensor2= " + String(sensors[1]));
+  Serial.println("Left Sensor= " + String(sensors[0]));
+  Serial.println("Left Center Sensor= " + String(sensors[1]));
+  Serial.println("Right Center Sensor= " + String(sensors[2]));
+  Serial.println("Right Sensor= " + String(sensors[3]));
   delay(100);
 }

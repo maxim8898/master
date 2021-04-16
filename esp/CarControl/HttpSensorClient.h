@@ -14,7 +14,7 @@ class HttpSensorClient{
     http.addHeader("Content-Type", "application/json");
     int httpResponseCode = http.POST(request);
    
-    Serial.print("HTTP Response code: ");
+    Serial.print("\nHTTP Response code: ");
     Serial.println(httpResponseCode);
       
     // Free resources
