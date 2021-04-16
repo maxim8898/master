@@ -112,6 +112,7 @@ class DevCorner extends React.Component {
                 </div>
                 <div className={'bottomChart'}>
                     <BottomChart/>
+                    <button onClick={() => this.setCarData({...this.state.carData[0], left: 20})}>+++</button>
                 </div>
             </div>
         )
