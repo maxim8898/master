@@ -21,10 +21,10 @@ class RightPanel extends React.Component {
         }
 
         const data = [
-            {name: 'rightBackground', value: 300},
-            {name: 'right', value: 98},
             {name: 'rightCenterBackground', value: 300},
-            {name: 'rightCenter', value: 213}
+            {name: 'rightCenter', value: this.props.carData.slice(-1)[0].right_center},
+            {name: 'rightBackground', value: 280},
+            {name: 'right', value: this.props.carData.slice(-1)[0].right}
         ]
 
         let chart = d3.select(this.leftPanel.current)
@@ -54,11 +54,11 @@ class RightPanel extends React.Component {
             }
 
             const preparedData =  [
-                { x: X, y: y(barTransform ? barTransform : barShift) },
-                { x: X, y: y(d.value) },
-                { x: X + bar.width, y: y(d.value - barTransform) },
-                { x: X + bar.width, y: y(barTransform ? 0 : barShift) },
-                { x: X, y: y(barTransform ? barTransform : barShift) }
+                { x: X, y: y(d.value + barTransform + barShift) },
+                { x: X, y: y(barTransform + barShift) },
+                { x: X + bar.width, y: y(barShift) },
+                { x: X + bar.width, y: y(d.value + barShift) },
+                { x: X, y: y(d.value + barTransform + barShift) }
 
             ];
 

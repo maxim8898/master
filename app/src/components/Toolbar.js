@@ -18,9 +18,9 @@ class Toolbar extends React.Component {
                 <Button name={"Start"}/>
                 <Button name={"Stop"}/>
                 <Button name={"Manual"}/>
-                <StatusField />
+                <StatusField name={"Angle"} value={this.props.carData.slice(-1)[0].angle}/>
                 <StatusField name={"Voltage"} value={12.1}/>
-                <StatusField name={"Speed"} value={22}/>
+                <StatusField name={"Speed"} value={this.props.carData.slice(-1)[0].speed}/>
             </div>
         )
     }

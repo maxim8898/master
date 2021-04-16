@@ -21,10 +21,10 @@ class LeftPanel extends React.Component {
         }
 
         const data = [
-            {name: 'leftBackground', value: 300},
-            {name: 'left', value: 123},
+            {name: 'leftBackground', value: 280},
+            {name: 'left', value: this.props.carData.slice(-1)[0].left},
             {name: 'leftCenterBackground', value: 300},
-            {name: 'leftCenter', value: 78}
+            {name: 'leftCenter', value: this.props.carData.slice(-1)[0].left_center}
         ]
 
         let chart = d3.select(this.leftPanel.current)
@@ -54,11 +54,11 @@ class LeftPanel extends React.Component {
             }
 
             const preparedData =  [
+                { x: X, y: y(d.value + barShift) },
                 { x: X, y: y(barShift) },
-                { x: X, y: y(d.value - barTransform) },
-                { x: X + bar.width, y: y(d.value) },
-                { x: X + bar.width, y: y(barTransform ? barTransform : barShift) },
-                { x: X, y: y(barShift) }
+                { x: X + bar.width, y: y(barTransform + barShift) },
+                { x: X + bar.width, y: y(d.value + barTransform + barShift) },
+                { x: X, y: y(d.value + barShift) }
 
             ];
 

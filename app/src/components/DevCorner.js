@@ -11,11 +11,40 @@ class DevCorner extends React.Component {
         this.myRef = React.createRef();
         this.state = {
             statusBar: { connection: { name: 'Connection', value: 'Connection closed', type: 'error' } },
-            connection: { url: '192.168.100.10/sensors' }
+            connection: { url: '192.168.100.10/sensors' },
+            carData: [{
+                datetime: 0,
+                left: 120,
+                left_center: 10,
+                right_center: 10,
+                right: 35,
+                speed: 0,
+                temperature: 0,
+                angle: 0
+            }]
         };
         this.initWebSocket = this.initWebSocket.bind(this);
         this.setConnectionStatus = this.setConnectionStatus.bind(this);
         this.setConnectionUrl = this.setConnectionUrl.bind(this);
+        this.setCarData = this.setCarData.bind(this);
+    }
+
+    setCarData(data) {
+        let carData = this.state.carData;
+        carData.push({
+            datetime: data.datetime,
+            left: data.left,
+            left_center: data.left_center,
+            right_center: data.right_center,
+            right: data.right,
+            speed: data.speed,
+            temperature: data.temperature,
+            angle: data.angle
+        })
+
+        this.setState(prevState => {
+            return { carData: carData.slice(-10) }
+        })
     }
 
     setConnectionUrl(e) {
@@ -56,7 +85,7 @@ class DevCorner extends React.Component {
                 setTimeout(this.initWebSocket, 2000);
             };
             websocket.onmessage = (e) => {
-                document.getElementById('sensor-data').innerHTML = e.data;
+                this.setCarData(e.data.collection);
             };
         } else {
             setTimeout(this.initWebSocket, 2000);
@@ -77,9 +106,9 @@ class DevCorner extends React.Component {
                         connection={this.state.statusBar.connection}/>
                 </div>
                 <div className={'devCornerPanel'}>
-                    <LeftPanel/>
-                    <Toolbar/>
-                    <RightPanel/>
+                    <LeftPanel carData={this.state.carData}/>
+                    <Toolbar carData={this.state.carData}/>
+                    <RightPanel carData={this.state.carData}/>
                 </div>
                 <div className={'bottomChart'}>
                     <BottomChart/>
