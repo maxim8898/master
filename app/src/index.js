@@ -7,7 +7,6 @@ import DevCorner from './components/DevCorner';
 ReactDOM.render(
   <React.StrictMode>
     <DevCorner />
-    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
