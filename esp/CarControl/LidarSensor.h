@@ -7,10 +7,14 @@ VL53L0X_RangingMeasurementData_t measure;
 
 #define TCAADDR 0x70
 
+const int maxDistance = 1200;
+
 bool isLeftSensorInitialized = true;
 bool isLeftCenterSensorInitialized = true;
 bool isRightCenterSensorInitialized = true;
 bool isRightSensorInitialized = true;
+
+int distance;
 
 class LidarSensor{
   public:
@@ -61,28 +65,48 @@ class LidarSensor{
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isLeftSensorInitialized) {  // phase failures have incorrect data
-      sensors[0] = measure.RangeMilliMeter;
+      distance = measure.RangeMilliMeter;
+      if (distance <= maxDistance){
+        sensors[0] = measure.RangeMilliMeter;
+      } else {
+        sensors[0] = maxDistance;
+      }
     }
 
     tcaSelect(6);
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isLeftCenterSensorInitialized) {  // phase failures have incorrect data
-      sensors[1] = measure.RangeMilliMeter;
+      distance = measure.RangeMilliMeter;
+      if (distance <= maxDistance){
+        sensors[1] = measure.RangeMilliMeter;
+      } else {
+        sensors[1] = maxDistance;
+      }
     }
 
     tcaSelect(5);
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isRightCenterSensorInitialized) {  // phase failures have incorrect data
-      sensors[2] = measure.RangeMilliMeter;
+      distance = measure.RangeMilliMeter;
+      if (distance <= maxDistance){
+        sensors[2] = measure.RangeMilliMeter;
+      } else {
+        sensors[2] = maxDistance;
+      }
     }
 
     tcaSelect(4);
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isRightSensorInitialized) {  // phase failures have incorrect data
-      sensors[3] = measure.RangeMilliMeter;
+      distance = measure.RangeMilliMeter;
+      if (distance <= maxDistance){
+        sensors[3] = measure.RangeMilliMeter;
+      } else {
+        sensors[3] = maxDistance;
+      }
     }
   }
 
