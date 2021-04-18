@@ -7,10 +7,15 @@ VL53L0X_RangingMeasurementData_t measure;
 
 #define TCAADDR 0x70
 
+const int minDistance = 0;
+const int maxDistance = 1200;
+
 bool isLeftSensorInitialized = true;
 bool isLeftCenterSensorInitialized = true;
 bool isRightCenterSensorInitialized = true;
 bool isRightSensorInitialized = true;
+
+int distance;
 
 class LidarSensor{
   public:
@@ -61,28 +66,32 @@ class LidarSensor{
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isLeftSensorInitialized) {  // phase failures have incorrect data
-      sensors[0] = measure.RangeMilliMeter;
+      distance = measure.RangeMilliMeter;
+      sensors[0] = constrain(distance, minDistance, maxDistance);
     }
 
     tcaSelect(6);
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isLeftCenterSensorInitialized) {  // phase failures have incorrect data
-      sensors[1] = measure.RangeMilliMeter;
+      distance = measure.RangeMilliMeter;
+      sensors[1] = constrain(distance, minDistance, maxDistance);
     }
 
     tcaSelect(5);
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isRightCenterSensorInitialized) {  // phase failures have incorrect data
-      sensors[2] = measure.RangeMilliMeter;
+      distance = measure.RangeMilliMeter;
+      sensors[2] = constrain(distance, minDistance, maxDistance);
     }
 
     tcaSelect(4);
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isRightSensorInitialized) {  // phase failures have incorrect data
-      sensors[3] = measure.RangeMilliMeter;
+      distance = measure.RangeMilliMeter;
+      sensors[3] = constrain(distance, minDistance, maxDistance);
     }
   }
 

@@ -14,11 +14,11 @@
 
 const int motorSpeedDefault = 1500;
 const int angleDefault = 90;
-const String serverName = "http://172.20.10.10:3002/snapshots";
+const String serverName = "http://192.168.100.3:3002/snapshots";
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
-char auth[] = "YourAuthToken";
+char auth[] = "wHgEI2juwdm4_rfzXi7wczlpYXZgbK95";
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
