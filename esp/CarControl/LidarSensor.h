@@ -7,6 +7,7 @@ VL53L0X_RangingMeasurementData_t measure;
 
 #define TCAADDR 0x70
 
+const int minDistance = 0;
 const int maxDistance = 1200;
 
 bool isLeftSensorInitialized = true;
@@ -66,11 +67,7 @@ class LidarSensor{
 
     if (measure.RangeStatus != 4 && isLeftSensorInitialized) {  // phase failures have incorrect data
       distance = measure.RangeMilliMeter;
-      if (distance <= maxDistance){
-        sensors[0] = measure.RangeMilliMeter;
-      } else {
-        sensors[0] = maxDistance;
-      }
+      sensors[0] = constrain(distance, minDistance, maxDistance);
     }
 
     tcaSelect(6);
@@ -78,11 +75,7 @@ class LidarSensor{
 
     if (measure.RangeStatus != 4 && isLeftCenterSensorInitialized) {  // phase failures have incorrect data
       distance = measure.RangeMilliMeter;
-      if (distance <= maxDistance){
-        sensors[1] = measure.RangeMilliMeter;
-      } else {
-        sensors[1] = maxDistance;
-      }
+      sensors[1] = constrain(distance, minDistance, maxDistance);
     }
 
     tcaSelect(5);
@@ -90,11 +83,7 @@ class LidarSensor{
 
     if (measure.RangeStatus != 4 && isRightCenterSensorInitialized) {  // phase failures have incorrect data
       distance = measure.RangeMilliMeter;
-      if (distance <= maxDistance){
-        sensors[2] = measure.RangeMilliMeter;
-      } else {
-        sensors[2] = maxDistance;
-      }
+      sensors[2] = constrain(distance, minDistance, maxDistance);
     }
 
     tcaSelect(4);
@@ -102,11 +91,7 @@ class LidarSensor{
 
     if (measure.RangeStatus != 4 && isRightSensorInitialized) {  // phase failures have incorrect data
       distance = measure.RangeMilliMeter;
-      if (distance <= maxDistance){
-        sensors[3] = measure.RangeMilliMeter;
-      } else {
-        sensors[3] = maxDistance;
-      }
+      sensors[3] = constrain(distance, minDistance, maxDistance);
     }
   }
 
