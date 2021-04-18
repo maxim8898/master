@@ -14,13 +14,12 @@ function LeftPanel (props) {
     }
 
     const data = [
-        {name: 'leftBackground', value: 280},
+        {name: 'leftBackground', value: 1980},
         {name: 'left', value: props.carData.slice(-1)[0].left},
-        {name: 'leftCenterBackground', value: 300},
+        {name: 'leftCenterBackground', value: 2000},
         {name: 'leftCenter', value: props.carData.slice(-1)[0].left_center}
     ]
 
-    // const [data, setData] = useState(initialState);
     const svgRef = useRef();
 
     useEffect(() => {
@@ -39,9 +38,9 @@ function LeftPanel (props) {
 
         let prepareBars = function (d, i) {
             let barShift = 0;
-            let barTransform = 20;
+            let barTransform = 200;
             if (i > 1) {
-                barShift = 20;
+                barShift = 200;
                 barTransform = 0;
             }
             let X = xScale(d.name);

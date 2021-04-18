@@ -13,7 +13,6 @@ class DevCorner extends React.Component {
             statusBar: { connection: { name: 'Connection', value: 'Connection closed', type: 'error' } },
             connection: { url: '192.168.100.10/sensors' },
             carData: [{
-                datetime: 0,
                 left: 120,
                 left_center: 10,
                 right_center: 10,
@@ -30,9 +29,9 @@ class DevCorner extends React.Component {
     }
 
     setCarData(data) {
+        data = JSON.parse(data);
         let carData = this.state.carData;
         carData.push({
-            datetime: data.datetime,
             left: data.left,
             left_center: data.left_center,
             right_center: data.right_center,
@@ -85,7 +84,7 @@ class DevCorner extends React.Component {
                 setTimeout(this.initWebSocket, 2000);
             };
             websocket.onmessage = (e) => {
-                this.setCarData(e.data.collection);
+                this.setCarData(e.data);
             };
         } else {
             setTimeout(this.initWebSocket, 2000);
