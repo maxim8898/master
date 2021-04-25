@@ -1,54 +1,35 @@
-import React from "react";
-import * as d3 from 'd3';
+import React, {useRef, useEffect} from "react";
+import {select, line, curveCardinal} from 'd3';
 
-class BottomChart extends React.Component {
-    constructor(props) {
-        super(props);
-        this.bottomChartRef = React.createRef()
-    }
+function BottomChart(props) {
+    const svgRef = useRef();
 
-    componentDidMount() {
-        const data = [
-            {x:1, y: 23},
-            {x:2, y: 54},
-            {x:3, y: 75},
-            {x:4, y: 23},
-            {x:5, y: 45},
-            {x:6, y: 85},
-            {x:7, y: 3},
-            {x:8, y: 67},
-            {x:9, y: 9},
-            {x:10, y: 12},
-        ]
+    useEffect(() => {
+        const data = [12, 43, 45, 88, 21, 11, 34, 23, 45, 31];
 
-        let x = d3.scaleLinear()
-            .domain([0, 10])
-            .range([0, 400]);
-
-        let y = d3.scaleLinear()
-            .domain([0, 100])
-            .range([0, 100]);
-
-        let svg = d3.select(this.bottomChartRef.current)
-            .append('svg')
+        const svg = select(svgRef.current)
             .attr('width', 400)
             .attr('height', 100);
+        const testLine = line()
+            .x((d, i) => i * 50)
+            .y(d => d)
+            .curve(curveCardinal);
 
-        svg.append('path')
-            .datum(data)
+        svg.selectAll('path')
+            .data([data])
+            .join('path')
+            .attr('d', value => testLine(value))
             .attr('fill', 'none')
-            .attr('stroke', 'steelblue')
-            .attr('d', d3.line()
-                .x((d) => x(d.x))
-                .y((d) => y(d.y))
-            );
-    }
+            .attr('stroke', '#61dafb');
 
-    render() {
-        return (
-            <div ref={this.bottomChartRef}></div>
-        )
-    }
+
+    }, [props]);
+
+    return (
+        <div className={'bottomChart'}>
+            <svg ref={svgRef}></svg>
+        </div>
+    )
 }
 
 export default BottomChart;

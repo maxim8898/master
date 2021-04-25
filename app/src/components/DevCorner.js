@@ -12,15 +12,16 @@ class DevCorner extends React.Component {
         this.state = {
             statusBar: { connection: { name: 'Connection', value: 'Connection closed', type: 'error' } },
             connection: { url: '192.168.100.10/sensors' },
-            carData: [{
-                left: 120,
-                left_center: 10,
-                right_center: 10,
-                right: 35,
-                speed: 0,
-                temperature: 0,
-                angle: 0
-            }]
+            carData: [{left: 240, left_center: 430, right_center: 700, right: 360, speed: 0, temperature: 0, angle: 0},
+                {left: 310, left_center: 240, right_center: 310, right: 420, speed: 0, temperature: 0, angle: 0},
+                {left: 720, left_center: 250, right_center: 110, right: 520, speed: 0, temperature: 0, angle: 0},
+                {left: 102, left_center: 430, right_center: 245, right: 236, speed: 0, temperature: 0, angle: 0},
+                {left: 409, left_center: 435, right_center: 377, right: 567, speed: 0, temperature: 0, angle: 0},
+                {left: 307, left_center: 156, right_center: 235, right: 455, speed: 0, temperature: 0, angle: 0},
+                {left: 680, left_center: 964, right_center: 366, right: 456, speed: 0, temperature: 0, angle: 0},
+                {left: 100, left_center: 346, right_center: 345, right: 234, speed: 0, temperature: 0, angle: 0},
+                {left: 720, left_center: 753, right_center: 134, right: 345, speed: 0, temperature: 0, angle: 0},
+                {left: 110, left_center: 330, right_center: 270, right: 620, speed: 0, temperature: 0, angle: 0}]
         };
         this.initWebSocket = this.initWebSocket.bind(this);
         this.setConnectionStatus = this.setConnectionStatus.bind(this);
@@ -111,7 +112,6 @@ class DevCorner extends React.Component {
                 </div>
                 <div className={'bottomChart'}>
                     <BottomChart/>
-                    <button onClick={() => this.setCarData({...this.state.carData[0], left: 20})}>+++</button>
                 </div>
             </div>
         )
