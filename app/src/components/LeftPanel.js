@@ -1,30 +1,31 @@
-import React, { useRef, useEffect, useState } from "react";
-import { max, select, axisBottom, axisRight, scaleLinear, scaleBand, line } from 'd3';
+import React, { useRef, useEffect } from "react";
+import { max, select, scaleLinear, scaleBand, line } from 'd3';
+import SmallChart from "./SmallChart";
 
 function LeftPanel (props) {
-    const bar = {
-        width: 100,
-        height: 300,
-        margin: 5
-    }
-    const area = {
-        width: 200,
-        height: 400,
-        margin: 10
-    }
-
-    const data = [
-        {name: 'leftBackground', value: 1980},
-        {name: 'left', value: props.carData.slice(-1)[0].left},
-        {name: 'leftCenterBackground', value: 2000},
-        {name: 'leftCenter', value: props.carData.slice(-1)[0].left_center}
-    ]
-
     const svgRef = useRef();
 
     useEffect(() => {
+        const bar = {
+            width: 100,
+            height: 300,
+            margin: 5
+        }
+        const area = {
+            width: 200,
+            height: 300,
+            margin: 10
+        }
+        const data = [
+            {name: 'leftBackground', value: 1000},
+            {name: 'left', value: props.carData.slice(-1)[0].left},
+            {name: 'leftCenterBackground', value: 1200},
+            {name: 'leftCenter', value: props.carData.slice(-1)[0].left_center}
+        ]
+
         const svg = select(svgRef.current);
         svg
+            .attr('class', 'barSection')
             .attr('width', area.width + area.margin)
             .attr('height', area.height + area.margin);
 
@@ -72,11 +73,13 @@ function LeftPanel (props) {
             .attr('stroke', 'black')
             .attr('fill', (d) => d.name.includes('Background') ? '#3e444f' : '#61dafb');
 
-    }, [data, props]);
+    }, [props]);
 
 
     return (
         <div className={'leftPanel'}>
+            <SmallChart data={props.carData.map(data => data.left)} position={'left'}/>
+            <SmallChart data={props.carData.map(data => data.left_center)} position={'leftCenter'}/>
             <svg ref={svgRef}></svg>
         </div>
     )

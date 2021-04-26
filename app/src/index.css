@@ -36,11 +36,21 @@ code {
   padding: 10px 10px 0 10px;
   text-align: center;
 }
+
+.leftPanel .barSection {
+  padding-top: 110px;
+}
+
 .rightPanel {
   display: flex;
   justify-content: center;
   padding: 10px 10px 0 10px;
   text-align: center;
+}
+
+.rightPanel .barSection {
+  padding-top: 110px;
+  padding-left: 10px;
 }
 
 .toolbar {
@@ -104,4 +114,36 @@ code {
 
 .toolbarButton:hover {
   border-bottom: solid 2px #61dafb;
+}
+
+.smallChart {
+  height: fit-content;
+  position: absolute;
+}
+
+.smallChart svg {
+  border: 1px solid #61dafb;
+}
+
+.smallChart.left {
+  transform: skewY(-26.5deg);
+  padding-top:25px;
+}
+
+.smallChart.leftCenter {
+  padding-left: 100px;
+}
+
+.smallChart.right {
+  transform: skewY(26.5deg);
+  padding-left:100px;
+}
+
+.smallChart.rightCenter {
+  padding-right: 100px;
+}
+
+.bottomChart svg {
+  border: 2px solid #61dafb;
+  border-radius: 1px;
 }
