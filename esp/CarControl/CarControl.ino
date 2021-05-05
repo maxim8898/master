@@ -25,13 +25,13 @@ JSON json;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/sensors");
 
-int motorSpeed = 0;
-int angle = 0;
+int motorSpeed = motorSpeedDefault;
+int angle = angleDefault;
 String request;
 int sensors[4];
 
 void setup() {
-  myservo.attach(0);
+  myservo.attach(12);
   myservo.write(angleDefault);
   
   motor.attach(2, 544, 2400);
@@ -50,14 +50,56 @@ void setup() {
   Serial.print("\nIP Address is: ");
   Serial.println(WiFi.localIP());
 
+  ws.onEvent(onEvent);
   server.addHandler(&ws);
   server.begin();
 }
 
+void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
+  AwsFrameInfo *info = (AwsFrameInfo*)arg;
+  if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
+    data[len] = 0;
+    DynamicJsonDocument doc(1024);
+    deserializeJson(doc, String((char*)data));
+    const String action = doc["action"];
+
+    if (action == "ArrowUp") {
+      motorSpeed = 1540;
+    } else if (action == "ArrowDown") {
+      motorSpeed = 1440;
+    } else if (action == "ArrowLeft") {
+      angle = 80;
+    } else if (action == "ArrowRight") {
+      angle = 100;
+    } else if (action == "Default") {
+      angle = angleDefault;
+    } else if (action == "DefaultSpeed") {
+      motorSpeed = 1500;
+    } else {
+      angle = angleDefault;
+    }
+  }
+}
+
+void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
+ void *arg, uint8_t *data, size_t len) {
+  switch (type) {
+    case WS_EVT_CONNECT:
+      Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+      break;
+    case WS_EVT_DISCONNECT:
+      Serial.printf("WebSocket client #%u disconnected\n", client->id());
+      break;
+    case WS_EVT_DATA:
+      handleWebSocketMessage(arg, data, len);
+      break;
+    case WS_EVT_PONG:
+    case WS_EVT_ERROR:
+      break;
+  }
+}
+
 void loop() {
-  int motorSpeed = motorSpeedDefault;
-  int angle = angleDefault;
-  
   motor.writeMicroseconds(motorSpeed);
   if (angle >= 75 && angle <= 105) {
     myservo.write(angle);

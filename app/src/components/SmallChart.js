@@ -15,7 +15,7 @@ function SmallChart(props) {
             .domain([0, 10]);
         const yScale = scaleLinear()
             .range([90, 10])
-            .domain([0, max(data)]);
+            .domain([0, 1200]);
 
         const customLine = line()
             .x((d, i) => xScale(i))
