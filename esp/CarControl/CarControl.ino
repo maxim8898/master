@@ -5,15 +5,12 @@
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <WiFiClient.h>
-#include <BlynkSimpleEsp8266.h>
 #include <Servo.h>
 #include "LidarSensor.h"
-#include "HttpSensorClient.h"
 #include "JSON.h"
 
 const int motorSpeedDefault = 1500;
 const int angleDefault = 90;
-const String serverName = "http://172.20.10.3:3002/snapshots";
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
@@ -23,12 +20,10 @@ char pass[] = "YourPassword";
 Servo myservo;
 Servo motor;
 LidarSensor lidarSensor;
-HttpSensorClient httpSensorClient;
 JSON json;
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/sensors");
-HTTPClient http;
 
 int motorSpeed = 0;
 int angle = 0;
@@ -56,7 +51,6 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   server.addHandler(&ws);
-  // Start server
   server.begin();
 }
 
@@ -71,7 +65,6 @@ void loop() {
   
   lidarSensor.ReadSensors(sensors);
   request = json.serialize(sensors[0], sensors[1], sensors[2], sensors[3], motorSpeed, 25, angle);
-  httpSensorClient.SendPostRequest(serverName, request);
   ws.textAll(String(request));
 
   Serial.println("Motor Speed= " + String(motorSpeed));
