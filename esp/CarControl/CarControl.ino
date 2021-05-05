@@ -5,20 +5,12 @@
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <WiFiClient.h>
-#include <BlynkSimpleEsp8266.h>
 #include <Servo.h>
-#include "BlynkControl.h"
 #include "LidarSensor.h"
-#include "HttpSensorClient.h"
 #include "JSON.h"
 
 const int motorSpeedDefault = 1500;
 const int angleDefault = 90;
-const String serverName = "http://192.168.100.3:3002/snapshots";
-
-// You should get Auth Token in the Blynk App.
-// Go to the Project Settings (nut icon).
-char auth[] = "wHgEI2juwdm4_rfzXi7wczlpYXZgbK95";
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
@@ -27,14 +19,11 @@ char pass[] = "YourPassword";
 
 Servo myservo;
 Servo motor;
-BlynkControl BlControl;
 LidarSensor lidarSensor;
-HttpSensorClient httpSensorClient;
 JSON json;
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/sensors");
-HTTPClient http;
 
 int motorSpeed = 0;
 int angle = 0;
@@ -50,18 +39,24 @@ void setup() {
   delay(3000);
   Serial.begin(115200);
   lidarSensor.InitializeSensors();
-  Blynk.begin(auth, ssid, pass);
+  WiFi.begin(ssid, pass);
+  Serial.print("Connecting");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.print("\nIP Address is: ");
+  Serial.println(WiFi.localIP());
 
   server.addHandler(&ws);
-  // Start server
   server.begin();
 }
 
 void loop() {
-  Blynk.run();
-
-  int motorSpeed = motorSpeedDefault + BlControl.GetAcceleration() * BlControl.GetPowerPercentage();
-  int angle = angleDefault + BlControl.GetAngle();
+  int motorSpeed = motorSpeedDefault;
+  int angle = angleDefault;
   
   motor.writeMicroseconds(motorSpeed);
   if (angle >= 75 && angle <= 105) {
@@ -70,7 +65,6 @@ void loop() {
   
   lidarSensor.ReadSensors(sensors);
   request = json.serialize(sensors[0], sensors[1], sensors[2], sensors[3], motorSpeed, 25, angle);
-  httpSensorClient.SendPostRequest(serverName, request);
   ws.textAll(String(request));
 
   Serial.println("Motor Speed= " + String(motorSpeed));
