@@ -7,12 +7,13 @@ VL53L0X_RangingMeasurementData_t measure;
 
 #define TCAADDR 0x70
 
+const int leftSensor = 3;
+const int leftCenterSensor = 4;
+const int rightSensor = 5;
+const int rightCenterSensor = 6;
+
 const int minDistance = 0;
 const int maxDistance = 1200;
-const int leftCenterSensor = 6;
-const int leftSensor = 5;
-const int rightSensor = 4;
-const int rightCenterSensor = 3;
 
 bool isLeftSensorInitialized = true;
 bool isLeftCenterSensorInitialized = true;
