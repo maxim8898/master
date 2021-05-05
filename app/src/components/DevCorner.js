@@ -99,17 +99,15 @@ class DevCorner extends React.Component {
                 document.addEventListener('keyup', function (event) {
                     switch (event.key) {
                         case 'ArrowLeft':
-                            websocket.send('{ action: "Default" }');
+                            websocket.send('{ action: "DefaultAngle" }');
                             break;
                         case 'ArrowRight':
-                            websocket.send('{ action: "Default" }');
+                            websocket.send('{ action: "DefaultAngle" }');
                             break;
                         case 'ArrowUp':
                         case 'ArrowDown':
                             websocket.send('{ action: "DefaultSpeed" }');
                             break;
-                        default:
-                            websocket.send('{ action: "Default" }');
                     }
                 });
             };

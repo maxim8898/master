@@ -1,16 +1,12 @@
 #include <Wire.h>
 #include "Adafruit_VL53L0X.h"
+#include "variables.h"
 
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 
 VL53L0X_RangingMeasurementData_t measure;
 
 #define TCAADDR 0x70
-
-const int leftSensor = 3;
-const int leftCenterSensor = 4;
-const int rightSensor = 5;
-const int rightCenterSensor = 6;
 
 const int minDistance = 0;
 const int maxDistance = 1200;
@@ -39,25 +35,25 @@ class LidarSensor{
         Serial.println(F("test"));
     }
 
-    tcaSelect(leftCenterSensor);
+    tcaSelect(LEFT_CENTER_SENSOR_PIN);
     if (!lox.begin()) {
         Serial.println(F("Failed to boot Left Pin 7 sensor"));
         isLeftSensorInitialized = false;
     }
 
-    tcaSelect(leftSensor);
+    tcaSelect(LEFT_SENSOR_PIN);
     if (!lox.begin()) {
         Serial.println(F("Failed to boot Left Center Pin 6 sensor"));
         isLeftCenterSensorInitialized = false;
     }
 
-    tcaSelect(rightSensor);
+    tcaSelect(RIGHT_SENSOR_PIN);
     if (!lox.begin()) {
         Serial.println(F("Failed to boot Right Center Pin 5 sensor"));
         isRightCenterSensorInitialized = false;
     }
 
-    tcaSelect(rightCenterSensor);
+    tcaSelect(RIGHT_CENTER_SENSOR_PIN);
     if (!lox.begin()) {
         Serial.println(F("Failed to boot Right Pin 4 sensor"));
         isRightSensorInitialized = false;
@@ -67,7 +63,7 @@ class LidarSensor{
   }
 
   void ReadSensors(int *sensors) {
-    tcaSelect(leftCenterSensor);
+    tcaSelect(LEFT_CENTER_SENSOR_PIN);
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isLeftSensorInitialized) {  // phase failures have incorrect data
@@ -75,7 +71,7 @@ class LidarSensor{
       sensors[0] = constrain(distance, minDistance, maxDistance);
     }
 
-    tcaSelect(leftSensor);
+    tcaSelect(LEFT_SENSOR_PIN);
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isLeftCenterSensorInitialized) {  // phase failures have incorrect data
@@ -83,7 +79,7 @@ class LidarSensor{
       sensors[1] = constrain(distance, minDistance, maxDistance);
     }
 
-    tcaSelect(rightSensor);
+    tcaSelect(RIGHT_SENSOR_PIN);
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isRightCenterSensorInitialized) {  // phase failures have incorrect data
@@ -91,7 +87,7 @@ class LidarSensor{
       sensors[2] = constrain(distance, minDistance, maxDistance);
     }
 
-    tcaSelect(rightCenterSensor);
+    tcaSelect(RIGHT_CENTER_SENSOR_PIN);
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
     if (measure.RangeStatus != 4 && isRightSensorInitialized) {  // phase failures have incorrect data

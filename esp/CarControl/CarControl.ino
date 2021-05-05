@@ -8,9 +8,7 @@
 #include <Servo.h>
 #include "LidarSensor.h"
 #include "JSON.h"
-
-const int motorSpeedDefault = 1500;
-const int angleDefault = 90;
+#include "variables.h"
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
@@ -25,17 +23,17 @@ JSON json;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/sensors");
 
-int motorSpeed = motorSpeedDefault;
-int angle = angleDefault;
+int motorSpeed = MOTOR_SPEED_DEFAULT;
+int angle = SERVO_ANGLE_DEFAULT;
 String request;
 int sensors[4];
 
 void setup() {
-  myservo.attach(12);
-  myservo.write(angleDefault);
+  myservo.attach(SERVO_PIN);
+  myservo.write(SERVO_ANGLE_DEFAULT);
   
-  motor.attach(2, 544, 2400);
-  motor.writeMicroseconds(motorSpeedDefault);
+  motor.attach(MOTOR_PIN, 544, 2400);
+  motor.writeMicroseconds(MOTOR_SPEED_DEFAULT);
   delay(3000);
   Serial.begin(115200);
   lidarSensor.InitializeSensors();
@@ -64,19 +62,19 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     const String action = doc["action"];
 
     if (action == "ArrowUp") {
-      motorSpeed = 1540;
+      motorSpeed = MOTOR_SPEED_FORWARD;
     } else if (action == "ArrowDown") {
-      motorSpeed = 1440;
+      motorSpeed = MOTOR_SPEED_BACK;
     } else if (action == "ArrowLeft") {
-      angle = 80;
+      angle = SERVO_ANGLE_LEFT;
     } else if (action == "ArrowRight") {
-      angle = 100;
-    } else if (action == "Default") {
-      angle = angleDefault;
+      angle = SERVO_ANGLE_RIGHT;
+    } else if (action == "DefaultAngle") {
+      angle = SERVO_ANGLE_DEFAULT;
     } else if (action == "DefaultSpeed") {
-      motorSpeed = 1500;
+      motorSpeed = MOTOR_SPEED_DEFAULT;
     } else {
-      angle = angleDefault;
+      angle = SERVO_ANGLE_DEFAULT;
     }
   }
 }
@@ -101,7 +99,7 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
 
 void loop() {
   motor.writeMicroseconds(motorSpeed);
-  if (angle >= 75 && angle <= 105) {
+  if (angle >= SERVO_ANGLE_LEFT && angle <= SERVO_ANGLE_RIGHT) {
     myservo.write(angle);
   }
   
