@@ -11,7 +11,7 @@ class DevCorner extends React.Component {
         this.myRef = React.createRef();
         this.state = {
             statusBar: { connection: { name: 'Connection', value: 'Connection closed', type: 'error' } },
-            connection: { url: '192.168.100.10/sensors' },
+            connection: { url: '172.20.10.2/sensors' },
             carData: [{left: 240, left_center: 430, right_center: 700, right: 360, speed: 0, temperature: 0, angle: 0},
                 {left: 310, left_center: 240, right_center: 310, right: 420, speed: 0, temperature: 0, angle: 0},
                 {left: 720, left_center: 250, right_center: 110, right: 520, speed: 0, temperature: 0, angle: 0},
@@ -79,6 +79,37 @@ class DevCorner extends React.Component {
         if (websocket) {
             websocket.onopen = () => {
                 this.setConnectionStatus('Connection opened', 'success');
+                document.addEventListener('keydown', function (event) {
+                    switch (event.key) {
+                        case 'ArrowUp':
+                            websocket.send('{ action: "ArrowUp" }');
+                            break;
+                        case 'ArrowDown':
+                            websocket.send('{ action: "ArrowDown" }');
+                            break;
+                        case 'ArrowLeft':
+                            websocket.send('{ action: "ArrowLeft" }');
+                            break;
+                        case 'ArrowRight':
+                            websocket.send('{ action: "ArrowRight" }');
+                            break;
+                    }
+                });
+
+                document.addEventListener('keyup', function (event) {
+                    switch (event.key) {
+                        case 'ArrowLeft':
+                            websocket.send('{ action: "DefaultAngle" }');
+                            break;
+                        case 'ArrowRight':
+                            websocket.send('{ action: "DefaultAngle" }');
+                            break;
+                        case 'ArrowUp':
+                        case 'ArrowDown':
+                            websocket.send('{ action: "DefaultSpeed" }');
+                            break;
+                    }
+                });
             };
             websocket.onclose = () => {
                 this.setConnectionStatus('Connection closed', 'error');

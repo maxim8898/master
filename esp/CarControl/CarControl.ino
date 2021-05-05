@@ -8,9 +8,7 @@
 #include <Servo.h>
 #include "LidarSensor.h"
 #include "JSON.h"
-
-const int motorSpeedDefault = 1500;
-const int angleDefault = 90;
+#include "variables.h"
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
@@ -25,17 +23,17 @@ JSON json;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/sensors");
 
-int motorSpeed = 0;
-int angle = 0;
+int motorSpeed = MOTOR_SPEED_DEFAULT;
+int angle = SERVO_ANGLE_DEFAULT;
 String request;
 int sensors[4];
 
 void setup() {
-  myservo.attach(0);
-  myservo.write(angleDefault);
+  myservo.attach(SERVO_PIN);
+  myservo.write(SERVO_ANGLE_DEFAULT);
   
-  motor.attach(2, 544, 2400);
-  motor.writeMicroseconds(motorSpeedDefault);
+  motor.attach(MOTOR_PIN, 544, 2400);
+  motor.writeMicroseconds(MOTOR_SPEED_DEFAULT);
   delay(3000);
   Serial.begin(115200);
   lidarSensor.InitializeSensors();
@@ -50,16 +48,58 @@ void setup() {
   Serial.print("\nIP Address is: ");
   Serial.println(WiFi.localIP());
 
+  ws.onEvent(onEvent);
   server.addHandler(&ws);
   server.begin();
 }
 
+void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
+  AwsFrameInfo *info = (AwsFrameInfo*)arg;
+  if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
+    data[len] = 0;
+    DynamicJsonDocument doc(1024);
+    deserializeJson(doc, String((char*)data));
+    const String action = doc["action"];
+
+    if (action == "ArrowUp") {
+      motorSpeed = MOTOR_SPEED_FORWARD;
+    } else if (action == "ArrowDown") {
+      motorSpeed = MOTOR_SPEED_BACK;
+    } else if (action == "ArrowLeft") {
+      angle = SERVO_ANGLE_LEFT;
+    } else if (action == "ArrowRight") {
+      angle = SERVO_ANGLE_RIGHT;
+    } else if (action == "DefaultAngle") {
+      angle = SERVO_ANGLE_DEFAULT;
+    } else if (action == "DefaultSpeed") {
+      motorSpeed = MOTOR_SPEED_DEFAULT;
+    } else {
+      angle = SERVO_ANGLE_DEFAULT;
+    }
+  }
+}
+
+void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
+ void *arg, uint8_t *data, size_t len) {
+  switch (type) {
+    case WS_EVT_CONNECT:
+      Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+      break;
+    case WS_EVT_DISCONNECT:
+      Serial.printf("WebSocket client #%u disconnected\n", client->id());
+      break;
+    case WS_EVT_DATA:
+      handleWebSocketMessage(arg, data, len);
+      break;
+    case WS_EVT_PONG:
+    case WS_EVT_ERROR:
+      break;
+  }
+}
+
 void loop() {
-  int motorSpeed = motorSpeedDefault;
-  int angle = angleDefault;
-  
   motor.writeMicroseconds(motorSpeed);
-  if (angle >= 75 && angle <= 105) {
+  if (angle >= SERVO_ANGLE_LEFT && angle <= SERVO_ANGLE_RIGHT) {
     myservo.write(angle);
   }
   
