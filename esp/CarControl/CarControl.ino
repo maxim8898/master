@@ -99,7 +99,7 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
 
 void loop() {
   motor.writeMicroseconds(motorSpeed);
-  if (angle >= SERVO_ANGLE_LEFT && angle <= SERVO_ANGLE_RIGHT) {
+  if (angle >= SERVO_ANGLE_RIGHT && angle <= SERVO_ANGLE_LEFT) {
     myservo.write(angle);
   }
   
