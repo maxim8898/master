@@ -1,5 +1,3 @@
-#define BLYNK_PRINT Serial
-
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ESPAsyncTCP.h>
@@ -7,8 +5,11 @@
 #include <WiFiClient.h>
 #include <Servo.h>
 #include "LidarSensor.h"
+#include "HttpSensorClient.h"
 #include "JSON.h"
 #include "variables.h"
+
+const String serverName = "http://172.20.10.12:3002/snapshots";
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
@@ -18,6 +19,7 @@ char pass[] = "YourPassword";
 Servo myservo;
 Servo motor;
 LidarSensor lidarSensor;
+HttpSensorClient httpSensorClient;
 JSON json;
 
 AsyncWebServer server(80);
@@ -105,6 +107,8 @@ void loop() {
   
   lidarSensor.ReadSensors(sensors);
   request = json.serialize(sensors[0], sensors[1], sensors[2], sensors[3], motorSpeed, 25, angle);
+//   SendDataToDatabase
+//   httpSensorClient.SendPostRequest(serverName, request);
   ws.textAll(String(request));
 
   Serial.println("Motor Speed= " + String(motorSpeed));
