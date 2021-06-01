@@ -31,6 +31,7 @@ String request;
 int sensors[4];
 
 void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
   myservo.attach(SERVO_PIN);
   myservo.write(SERVO_ANGLE_DEFAULT);
   
@@ -43,7 +44,10 @@ void setup() {
   Serial.print("Connecting");
   while (WiFi.status() != WL_CONNECTED)
   {
-    delay(500);
+    digitalWrite(LED_BUILTIN, LOW);   // Turn the LED on (Note that LOW is the voltage level
+    delay(250);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(250);
     Serial.print(".");
   }
 
