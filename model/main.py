@@ -1,40 +1,3 @@
-# import pygame
-# import time
-#
-# pygame.init()
-#
-# # Set up the drawing window
-# screen = pygame.display.set_mode([700, 405])
-# bg = pygame.image.load("map.png").convert()
-# original_car = pygame.image.load("car1.png").convert()
-# angle = 1
-#
-# # Run until the user asks to quit
-# running = True
-# while running:
-#
-#     # Did the user click the window close button?
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             running = False
-#
-#     # Fill the background with white
-#     # screen.fill((0, 50, 0))
-#     screen.blit(bg, (0, 0))
-#     angle += 1
-#
-#     car = pygame.transform.rotate(original_car, angle)
-#     screen.blit(car, (50, 50))
-#
-#     # Flip the display
-#     pygame.display.flip()
-#     angle += 1
-#     car = pygame.transform.rotate(original_car, angle)
-#     time.sleep(.1)
-#
-# # Done! Time to quit.
-# pygame.quit()
-
 import os
 import pygame
 from math import sin, radians, degrees, copysign
@@ -51,7 +14,7 @@ class Car:
         self.max_steering = max_steering
         self.max_velocity = 20
         self.brake_deceleration = 10
-        self.free_deceleration = 2
+        self.free_deceleration = 5
 
         self.acceleration = 0.0
         self.steering = 0.0
@@ -102,7 +65,7 @@ class Game:
                 if car.velocity.x < 0:
                     car.acceleration = car.brake_deceleration
                 else:
-                    car.acceleration += 1 * dt
+                    car.acceleration += 2 * dt
             elif pressed[pygame.K_DOWN]:
                 if car.velocity.x > 0:
                     car.acceleration = -car.brake_deceleration
@@ -122,9 +85,9 @@ class Game:
             car.acceleration = max(-car.max_acceleration, min(car.acceleration, car.max_acceleration))
 
             if pressed[pygame.K_RIGHT]:
-                car.steering -= 30 * dt
+                car.steering -= 100 * dt
             elif pressed[pygame.K_LEFT]:
-                car.steering += 30 * dt
+                car.steering += 100 * dt
             else:
                 car.steering = 0
             car.steering = max(-car.max_steering, min(car.steering, car.max_steering))
